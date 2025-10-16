@@ -12,6 +12,7 @@
             <th>Location</th>
             <th>Date</th>
             <th>Category</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +24,7 @@
                 <td>@activity.Location</td>
                 <td>@activity.Date.ToString("g")</td>
                 <td style="color: rgb(@activity.Category?.CategoryColor.R, @activity.Category?.CategoryColor.G, @activity.Category?.CategoryColor.B)">@activity.Category?.Name</td>
+                <td><a href="@Url.Action("Details", "Home", new { id = activity.SaActivityId })">View Details</a></td>
             </tr>
         }
     </tbody>

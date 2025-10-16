@@ -1,20 +1,15 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using ActivityManager.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace SaActivityManager.Controllers
-{
-    public class HomeController : Controller
-    {
+namespace SaActivityManager.Controllers {
+    public class HomeController: Controller {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
+        public HomeController(ILogger<HomeController> logger) {
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
+        public IActionResult Index() {
             List<SaActivity> activities = new List<SaActivity>
             {
                 new SaActivity
@@ -66,8 +61,24 @@ namespace SaActivityManager.Controllers
             return View(activities);
         }
 
-        public IActionResult Privacy()
-        {
+        public IActionResult Details(int id) {
+            var activity = new SaActivity {
+                SaActivityId = id,
+                Name = "Sample Activity",
+                Description = "This is a detailed description of the activity.",
+                Location = "Sample Location",
+                Date = DateTime.Now.AddDays(1),
+                Category = new Category {
+                    CategoryId = 1,
+                    Name = "Sample Category",
+                    Description = "This is a sample category.",
+                    CategoryColor = new Category.Color { R = 100, G = 150, B = 200 }
+                }
+            };
+            return View(activity);
+        }
+
+        public IActionResult Privacy() {
             return View();
         }
     }
