@@ -1,6 +1,6 @@
 ﻿namespace ActivityManager.Models {
     public class SaActivity {
-        public int SaActivityId { get; set; } 
+        public int SaActivityId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;

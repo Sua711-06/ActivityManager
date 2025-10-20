@@ -1,20 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ActivityManager.Migrations
-{
+namespace ActivityManager.Migrations {
     /// <inheritdoc />
-    public partial class initial : Migration
-    {
+    public partial class initial: Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "Category",
-                columns: table => new
-                {
+                columns: table => new {
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -23,15 +18,13 @@ namespace ActivityManager.Migrations
                     G = table.Column<byte>(type: "tinyint", nullable: false),
                     B = table.Column<byte>(type: "tinyint", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Category", x => x.CategoryId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "SaActivity",
-                columns: table => new
-                {
+                columns: table => new {
                     SaActivityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -41,8 +34,7 @@ namespace ActivityManager.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_SaActivity", x => x.SaActivityId);
                     table.ForeignKey(
                         name: "FK_SaActivity_Category_CategoryId",
@@ -59,8 +51,7 @@ namespace ActivityManager.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "SaActivity");
 

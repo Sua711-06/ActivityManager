@@ -1,44 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ActivityManager.Data;
+using ActivityManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ActivityManager.Data;
-using ActivityManager.Models;
 
-namespace ActivityManager.Controllers
-{
-    public class SaActivitiesController : Controller
-    {
+namespace ActivityManager.Controllers {
+    public class SaActivitiesController: Controller {
         private readonly ActivityManagerContext _context;
 
-        public SaActivitiesController(ActivityManagerContext context)
-        {
+        public SaActivitiesController(ActivityManagerContext context) {
             _context = context;
         }
 
         // GET: SaActivities
-        public async Task<IActionResult> Index()
-        {
+        public async Task<IActionResult> Index() {
             var activityManagerContext = _context.SaActivity.Include(s => s.Category);
             return View(await activityManagerContext.ToListAsync());
         }
 
         // GET: SaActivities/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Details(int? id) {
+            if(id == null) {
                 return NotFound();
             }
 
             var saActivity = await _context.SaActivity
                 .Include(s => s.Category)
                 .FirstOrDefaultAsync(m => m.SaActivityId == id);
-            if (saActivity == null)
-            {
+            if(saActivity == null) {
                 return NotFound();
             }
 
@@ -46,8 +35,7 @@ namespace ActivityManager.Controllers
         }
 
         // GET: SaActivities/Create
-        public IActionResult Create()
-        {
+        public IActionResult Create() {
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId");
             return View();
         }
@@ -57,29 +45,25 @@ namespace ActivityManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity)
-        {
-            if (ModelState.IsValid)
-            {
+        public async Task<IActionResult> Create([Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity) {
+            if(ModelState.IsValid) {
+                saActivity.Created = DateTime.Now;
                 _context.Add(saActivity);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", saActivity.CategoryId);
             return View(saActivity);
         }
 
         // GET: SaActivities/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Edit(int? id) {
+            if(id == null) {
                 return NotFound();
             }
 
             var saActivity = await _context.SaActivity.FindAsync(id);
-            if (saActivity == null)
-            {
+            if(saActivity == null) {
                 return NotFound();
             }
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", saActivity.CategoryId);
@@ -91,28 +75,19 @@ namespace ActivityManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity)
-        {
-            if (id != saActivity.SaActivityId)
-            {
+        public async Task<IActionResult> Edit(int id, [Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity) {
+            if(id != saActivity.SaActivityId) {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            if(ModelState.IsValid) {
+                try {
                     _context.Update(saActivity);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SaActivityExists(saActivity.SaActivityId))
-                    {
+                } catch(DbUpdateConcurrencyException) {
+                    if(!SaActivityExists(saActivity.SaActivityId)) {
                         return NotFound();
-                    }
-                    else
-                    {
+                    } else {
                         throw;
                     }
                 }
@@ -123,18 +98,15 @@ namespace ActivityManager.Controllers
         }
 
         // GET: SaActivities/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Delete(int? id) {
+            if(id == null) {
                 return NotFound();
             }
 
             var saActivity = await _context.SaActivity
                 .Include(s => s.Category)
                 .FirstOrDefaultAsync(m => m.SaActivityId == id);
-            if (saActivity == null)
-            {
+            if(saActivity == null) {
                 return NotFound();
             }
 
@@ -144,11 +116,9 @@ namespace ActivityManager.Controllers
         // POST: SaActivities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+        public async Task<IActionResult> DeleteConfirmed(int id) {
             var saActivity = await _context.SaActivity.FindAsync(id);
-            if (saActivity != null)
-            {
+            if(saActivity != null) {
                 _context.SaActivity.Remove(saActivity);
             }
 
@@ -156,8 +126,7 @@ namespace ActivityManager.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SaActivityExists(int id)
-        {
+        private bool SaActivityExists(int id) {
             return _context.SaActivity.Any(e => e.SaActivityId == id);
         }
     }
