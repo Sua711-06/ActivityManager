@@ -24,7 +24,9 @@ namespace SaActivityManager.Controllers {
                         CategoryId = 1,
                         Name = "Fitness",
                         Description = "Activities related to physical fitness.",
-                        CategoryColor = new Category.Color { R = 0, G = 255, B = 0 }
+                        R = 0,
+                        G = 255,
+                        B = 0
                     }
                 },
                 new SaActivity
@@ -39,7 +41,9 @@ namespace SaActivityManager.Controllers {
                         CategoryId = 2,
                         Name = "Work",
                         Description = "Professional work-related activities.",
-                        CategoryColor = new Category.Color { R = 0, G = 0, B = 255 }
+                        R = 0,
+                        G = 255,
+                        B = 255
                     }
                 },
                 new SaActivity
@@ -54,7 +58,9 @@ namespace SaActivityManager.Controllers {
                         CategoryId = 3,
                         Name = "Hobby",
                         Description = "Leisure and hobby activities.",
-                        CategoryColor = new Category.Color { R = 255, G = 0, B = 0 }
+                        R = 255,
+                        G = 255,
+                        B = 0
                     }
                 }
             };
@@ -72,7 +78,9 @@ namespace SaActivityManager.Controllers {
                     CategoryId = 1,
                     Name = "Sample Category",
                     Description = "This is a sample category.",
-                    CategoryColor = new Category.Color { R = 100, G = 150, B = 200 }
+                    R = 100,
+                    G = 150,
+                    B = 200
                 }
             };
             return View(activity);
