@@ -5,26 +5,18 @@
 <h1>All activities</h1>
 <a class="btn btn-primary mb-3" asp-controller="SaActivities" asp-action="Create">Add New</a>
 
-<div class="container">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var activity in Model)
-        {
+<div class="container-fluid">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 gy-4">
+        @foreach (var activity in Model) {
             var categoryBackground = activity.Category != null
                 ? $"rgb({activity.Category.R},{activity.Category.G},{activity.Category.B})"
                 : "transparent";
-
-            // Compute perceived brightness using the common YIQ / luminosity approximation:
-            // brightness = 0.299*R + 0.587*G + 0.114*B
-            // If brightness is high, use black text; otherwise use white text.
             string badgeTextColor;
-            if (activity.Category != null)
-            {
+            if (activity.Category != null) {
                 var brightness = (0.299 * activity.Category.R) + (0.587 * activity.Category.G) + (0.114 * activity.Category.B);
-                badgeTextColor = brightness > 186 ? "#000" : "#fff"; // 186 is a common threshold
-            }
-            else
-            {
-                badgeTextColor = "#212529"; // Bootstrap body text for transparent/no category
+                badgeTextColor = brightness > 186 ? "#000" : "#fff";
+            } else {
+                badgeTextColor = "#212529";
             }
 
             <div class="col">
@@ -40,7 +32,7 @@
                         <span class="badge" style="background-color:@categoryBackground; color:@badgeTextColor">
                             @activity.Category?.Name
                         </span>
-                        <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Details", "Home", new { id = activity.SaActivityId })">View Details</a>
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="Home" asp-action="Details" asp-route-id="@activity.SaActivityId">View Details</a>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,7 @@ namespace ActivityManager.Controllers {
 
         // GET: Categories
         public async Task<IActionResult> Index() {
-            return View(await _context.Category.ToListAsync());
+            return View(await _context.Category.Include(c => c.Activities).ToListAsync());
         }
 
         // GET: Categories/Details/5
@@ -23,6 +23,7 @@ namespace ActivityManager.Controllers {
             }
 
             var category = await _context.Category
+                .Include(c => c.Activities)
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if(category == null) {
                 return NotFound();
@@ -125,6 +126,7 @@ namespace ActivityManager.Controllers {
             }
 
             var category = await _context.Category
+                .Include(c => c.Activities)
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if(category == null) {
                 return NotFound();

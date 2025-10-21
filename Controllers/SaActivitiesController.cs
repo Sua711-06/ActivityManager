@@ -36,7 +36,7 @@ namespace ActivityManager.Controllers {
 
         // GET: SaActivities/Create
         public IActionResult Create() {
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId");
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name");
             return View();
         }
 
@@ -48,11 +48,16 @@ namespace ActivityManager.Controllers {
         public async Task<IActionResult> Create([Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity) {
             if(ModelState.IsValid) {
                 saActivity.Created = DateTime.Now;
-                _context.Add(saActivity);
+                var category = await _context.Category
+                    .Include(c => c.Activities)
+                    .FirstOrDefaultAsync(c => c.CategoryId == saActivity.CategoryId);
+                category?.Activities.Add(saActivity);
+
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", saActivity.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name", saActivity.CategoryId);
             return View(saActivity);
         }
 
@@ -66,7 +71,7 @@ namespace ActivityManager.Controllers {
             if(saActivity == null) {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", saActivity.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name", saActivity.CategoryId);
             return View(saActivity);
         }
 
@@ -91,9 +96,9 @@ namespace ActivityManager.Controllers {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "CategoryId", saActivity.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name", saActivity.CategoryId);
             return View(saActivity);
         }
 
@@ -123,7 +128,7 @@ namespace ActivityManager.Controllers {
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         private bool SaActivityExists(int id) {

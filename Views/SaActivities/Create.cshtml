@@ -4,13 +4,11 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Create New Activity</h1>
 
-<h4>SaActivity</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" class="row g-3">
+        <form asp-action="Create" class="row gy-3">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -37,14 +35,14 @@
                 <label asp-for="CategoryId" class="control-label"></label>
                 <div class="col">
                     <select asp-for="CategoryId" id="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
-                    <button id="addCategoryBtn" type="button" class="btn btn-primary mt-2">Add New Category</button>
+                    <button id="addCategoryBtn" type="button" class="btn btn-outline-primary mt-2">Add New Category</button>
                 </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
             <div>
-                <a asp-controller="Home" asp-action="Index">Back to List</a>
+                <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
