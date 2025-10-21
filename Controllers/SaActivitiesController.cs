@@ -35,8 +35,8 @@ namespace ActivityManager.Controllers {
         }
 
         // GET: SaActivities/Create
-        public IActionResult Create() {
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name");
+        public IActionResult Create(int? newCategoryId) {
+            ViewBag.CategoryId = new SelectList(_context.Category.OrderBy(c => c.Name).ToList(), "CategoryId", "Name", newCategoryId);
             return View();
         }
 
@@ -60,6 +60,7 @@ namespace ActivityManager.Controllers {
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Name", saActivity.CategoryId);
             return View(saActivity);
         }
+
 
         // GET: SaActivities/Edit/5
         public async Task<IActionResult> Edit(int? id) {

@@ -51,13 +51,51 @@ namespace ActivityManager.Controllers {
             return View(category);
         }
 
+        // New: POST from modal form (server-driven)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateFromModal(string name, string description, string color, string returnController, string returnAction) {
+            if(string.IsNullOrWhiteSpace(name)) {
+                TempData["CategoryError"] = "Name is required.";
+                return RedirectToAction(returnAction ?? "Create", returnController ?? "SaActivities");
+            }
+
+            byte r = 255, g = 0, b = 0;
+            if (!string.IsNullOrEmpty(color) && color.StartsWith("#") && color.Length == 7) {
+                try {
+                    r = Convert.ToByte(color.Substring(1, 2), 16);
+                    g = Convert.ToByte(color.Substring(3, 2), 16);
+                    b = Convert.ToByte(color.Substring(5, 2), 16);
+                } catch {
+                    
+                }
+            }
+
+            var category = new Category {
+                Name = name,
+                Description = description,
+                R = r,
+                G = g,
+                B = b
+            };
+
+            if(!ModelState.IsValid) {
+                TempData["CategoryError"] = "Validation failed creating category.";
+                return RedirectToAction(returnAction ?? "Create", returnController ?? "SaActivities");
+            }
+
+            _context.Add(category);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(returnAction ?? "Create", returnController ?? "SaActivities", new { newCategoryId = category.CategoryId });
+        }
+
         // POST: Categories/CreateAjax
         // Returns JSON so client-side code can update the category select without page reload.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAjax([Bind("CategoryId,Name,Description,R,G,B")] Category category) {
             if (!ModelState.IsValid) {
-                // return validation errors as JSON
                 var errors = ModelState
                     .Where(kvp => kvp.Value.Errors.Count > 0)
                     .ToDictionary(

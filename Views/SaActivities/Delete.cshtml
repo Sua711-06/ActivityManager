@@ -2,6 +2,14 @@
 
 @{
     ViewData["Title"] = "Delete";
+    var categoryBackground = Model.Category != null ? $"rgb({Model.Category.R}, {Model.Category.G}, {Model.Category.B})" : "transparent";
+    string badgeTextColor;
+    if(Model.Category != null) {
+        var brightness = (0.299 * Model.Category.R) + (0.587 * Model.Category.G) + (0.114 * Model.Category.B);
+        badgeTextColor = brightness > 186 ? "#000" : "#fff";
+    } else {
+        badgeTextColor = "#212529";
+    }
 }
 
 <h1>Delete</h1>
@@ -43,7 +51,9 @@
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Name)
+            <span class="badge" style="background-color:@categoryBackground; color:@badgeTextColor">
+                @Html.DisplayFor(model => model.Category.Name)
+            </span>
         </dd>
     </dl>
     

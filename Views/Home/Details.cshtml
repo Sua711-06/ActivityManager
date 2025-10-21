@@ -15,11 +15,9 @@
     }
 }
 
-<h1>Details</h1>
-
+<h1>Activity Details</h1>
+<hr />
 <div>
-    <h4>SaActivity</h4>
-    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SaActivityId)
@@ -61,10 +59,11 @@
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
-            <span class="badge" style="background-color:@categoryBackground; color:@badgeTextColor">
-                @(Model.Category != null ? Html.DisplayFor(model => model.Category.Name) : "")
-            </span>
-            
+            <a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.Category.CategoryId">
+                <span class="badge" style="background-color:@categoryBackground; color:@badgeTextColor">
+                    @(Model.Category != null ? Html.DisplayFor(model => model.Category.Name) : "")
+                </span>
+            </a>
         </dd>
     </dl>
 </div>
