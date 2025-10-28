@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActivityManager.Models {
     public class SaActivity {
@@ -14,6 +15,12 @@ namespace ActivityManager.Models {
         public DateTime Date { get; set; }
         [Display(Name = "Created On")]
         public DateTime Created { get; set; } = DateTime.Now;
+
+        public string ImageFileName { get; set; } = string.Empty;
+
+        [NotMapped]
+        [Display(Name = "Image")]
+        public IFormFile? ImageFile { get; set; }
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }

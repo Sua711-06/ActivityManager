@@ -45,14 +45,22 @@ namespace ActivityManager.Controllers {
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId")] SaActivity saActivity) {
+        public async Task<IActionResult> Create([Bind("SaActivityId,Name,Description,Location,Date,Created,CategoryId,ImageFile")] SaActivity saActivity) {
             if(ModelState.IsValid) {
                 saActivity.Created = DateTime.Now;
                 var category = await _context.Category
                     .Include(c => c.Activities)
                     .FirstOrDefaultAsync(c => c.CategoryId == saActivity.CategoryId);
                 category?.Activities.Add(saActivity);
-
+                
+                if (saActivity.ImageFile != null) {
+                    var fileName = Path.GetFileName(saActivity.ImageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create)) {
+                        await saActivity.ImageFile.CopyToAsync(stream);
+                    }
+                    saActivity.ImageFileName = fileName;
+                }
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
