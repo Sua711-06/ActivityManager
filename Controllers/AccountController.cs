@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhotoAlbum.Controllers {
     public class AccountController: Controller {
@@ -12,13 +13,25 @@ namespace PhotoAlbum.Controllers {
         }
 
         // GET: /Account/Login
-        public IActionResult Login() {
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? returnUrl) {
+            // If already authenticated, send to Home (preserve returnUrl)
+            if (User?.Identity?.IsAuthenticated == true) {
+                if (!string.IsNullOrEmpty(returnUrl)) {
+                    return LocalRedirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string username, string password, string returnUrl) {
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string username, string password, string? returnUrl) {
             if(username == _configuration["username"] && password == _configuration["password"]) {
                 var claims = new List<Claim>
                 {
@@ -33,19 +46,19 @@ namespace PhotoAlbum.Controllers {
                     new ClaimsPrincipal(claimsIdentity));
 
                 if(!string.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
+                    return LocalRedirect(returnUrl);
                 } else {
                     return RedirectToAction("Index", "Home");
                 }
-
             }
 
             ViewBag.ErrorMessage = "Invalid username or password.";
-
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         public IActionResult Logout() {
+
             return View();
         }
 
@@ -53,7 +66,6 @@ namespace PhotoAlbum.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogoutConfirmed() {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             return RedirectToAction("Login", "Account");
         }
     }

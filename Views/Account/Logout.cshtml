@@ -1,0 +1,13 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Confirm log out</h1>
+<hr />
+
+<p>Are you sure you want to log out?</p>
+<form asp-action="LogoutConfirmed" method="post">
+    <button type="submit" class="btn btn-danger">Log out</button>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Cancel</a>
+</form>
