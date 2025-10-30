@@ -16,27 +16,17 @@ namespace PhotoAlbum.Controllers {
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl) {
-            // If already authenticated, send to Home (preserve returnUrl)
-            if (User?.Identity?.IsAuthenticated == true) {
-                if (!string.IsNullOrEmpty(returnUrl)) {
-                    return LocalRedirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Home");
-            }
-
-            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
         public async Task<IActionResult> Login(string username, string password, string? returnUrl) {
             if(username == _configuration["username"] && password == _configuration["password"]) {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, "admin"),
-                    new Claim(ClaimTypes.Name, "Administrator"),
+                    new Claim(ClaimTypes.Name, "Administrator"),       
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims,
@@ -46,14 +36,15 @@ namespace PhotoAlbum.Controllers {
                     new ClaimsPrincipal(claimsIdentity));
 
                 if(!string.IsNullOrEmpty(returnUrl)) {
-                    return LocalRedirect(returnUrl);
+                    return Redirect(returnUrl);
                 } else {
                     return RedirectToAction("Index", "Home");
                 }
+
             }
 
             ViewBag.ErrorMessage = "Invalid username or password.";
-            ViewData["ReturnUrl"] = returnUrl;
+
             return View();
         }
 
